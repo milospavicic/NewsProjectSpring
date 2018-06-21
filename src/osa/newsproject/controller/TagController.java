@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import osa.newsproject.dto.PostDTO;
@@ -64,10 +65,10 @@ public class TagController {
         return  new ResponseEntity<List<PostDTO>>(postDTOS,HttpStatus.OK);
     }
 
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<TagDTO>addTag(@RequestBody TagDTO tagDTO){
+    @PostMapping
+    public ResponseEntity<TagDTO>addTag(@RequestParam("name") String name){
         Tag tag=new Tag();
-        tag.setName(tagDTO.getName());
+        tag.setName(name);
 
         tag=tagServiceInterface.save(tag);
         return new ResponseEntity<TagDTO>(new TagDTO(tag),HttpStatus.CREATED);

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Posts</title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/nav.css">
+    <link rel="stylesheet" type="text/css" href="css/posts.css">
+    <script src="js/nav.js" type="text/javascript"></script>
+    <script src="js/posts.js" type="text/javascript"></script>
+    
+</head>
+<body>
+	<div class="modal fade" id="newPostModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Register Form</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="title" id="title" class="form-control" placeholder="Title*" required/>
+                        	<input type="text" name="description" id="description" class="form-control" placeholder="Description" required/>
+                        	<input type="text" name="tagsField" id="tagsField" class="form-control" placeholder="#Cool#New" required/>
+              				<input type="file" name="pic" accept="image/*" id="newPic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block" id="newPostSubmit" onclick="saveNewPost()">Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div id="mainControl">
+		<button id="loginButton" class="btn btn-default">Login</button>
+		<button id="registerButton" class="btn btn-default">Register</button>
+		<button id="logoutButton" class="btn btn-default">Logout</button>
+		<a href="posts.html" class="btn btn-default">Posts</a>
+		<a href="users.html" class="btn btn-default">Users</a>
+	</div>
+	<table id="postsTable" class="table-bordered" >
+		<tr class="myHeaders">
+			<td><label for="sortBySelect">Sort by: </label>
+				<select id="sortBySelect" onChange="sortPosts()">
+				<option value="1">Most recent</option>
+				<option value="2">Most popular</option>
+				<option value="3">Most commented</option>
+				</select>
+			</td>
+
+			<td><input type="text" placeholder="Search" id="searchField"><button  class="btn btn-default" onclick="search()">Submit</button></td>
+			<td><button onclick="sortPosts()" class="btn btn-default">Refresh</button></td>
+			<td><button onclick="showNewPostModal()" class="btn btn-danger">New</button></td>
+		</tr>
+		<tr class="myHeaders">
+			<th>Title</th>
+			<th>Author</th>
+			<th>Date</th>
+			<th>Likes</th>
+			<th>Dislikes</th>
+		</tr>
+	</table>
+</body>
+</html>

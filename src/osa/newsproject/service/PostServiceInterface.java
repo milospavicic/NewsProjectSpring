@@ -14,4 +14,12 @@ public interface PostServiceInterface{
 	void remove(Integer id);
 	
 	List<Post> findByTags_Id(Integer tagId);
+	
+	List<Post> findAllByOrderByDate();
+	
+	List<Post> findAllByOrderByPopularity();
+	
+	List<Post> findAllByCommentsCount();
+	
+//	List<Post> findAllByCommentsCountAndSearch(String parameter);
 }

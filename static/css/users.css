@@ -1,0 +1,10 @@
+#usersTable{
+	margin: 20px;
+}
+td,th{
+	padding: 10px;
+	
+}
+.table-bordered {
+   width: auto !important;
+}

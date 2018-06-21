@@ -1,0 +1,12 @@
+@charset "UTF-8";
+#postDiv,#commentsDiv,#mytable{
+	margin: 20px;
+}
+#usernameLabel{
+	margin-left: 10px;
+}
+#shortline{
+	margin-right:100%;
+	width: 30%;
+	float: left;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Post</title>
+	<script src="js/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"/>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/nav.css">
+    <link rel="stylesheet" type="text/css" href="css/post.css">
+    <script src="js/nav.js" type="text/javascript"></script>
+    <script src="js/post.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="mainControl">
+		<button id="loginButton" class="btn btn-default">Login</button>
+		<button id="registerButton" class="btn btn-default">Register</button>
+		<button id="logoutButton" class="btn btn-default">Logout</button>
+		<a href="posts.html" class="btn btn-default">Posts</a>
+		<a href="users.html" class="btn btn-default">Users</a>
+	</div>
+	<div id="postDiv">
+		<button class="btn btn-default">Edit</button>
+		<h2 id="postTitle">Title</h2>
+		<p id="postDesc">Description</p>
+		<img alt="picture" id="postPic">
+		<p id="postAuthor">Author</p>
+		<p id="postDate">Date posted:</p>
+		<p id="tags">Tags: </p>
+		<label for="like" id="likeLabel">1234</label>
+		<button id="like" class="btn btn-default">Like</button>
+		<label for="dislike" id="dislikeLabel">1234</label>
+		<button id="dislike" class="btn btn-default">Dislike</button>
+		<!--  -->
+	</div>
+	<table id="mytable">
+		<th>
+			<label for="sortBySelect">Sort comments by: </label>
+			<select id="sortBySelect" onChange="sortPosts()">
+				<option value="1">Most recent</option>
+				<option value="2">Most popular</option>
+			</select>
+		</th>
+	</table>
+	<div id="commentsDiv">
+		<hr>
+		<h3>Comments:</h3>
+		<div class="comment">
+			<img alt="commentPic" id="commentPic">
+			<label for="commentPic">User name</label>
+			<p id="commentDate">Posted on:</p>
+			<h3 id="commentTitle">Title</h3>
+			<p id="commentText">Text</p>
+		</div>
+	</div>
+</body>
+</html>

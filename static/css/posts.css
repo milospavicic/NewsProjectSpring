@@ -1,0 +1,11 @@
+@charset "UTF-8";
+#postsTable{
+	margin: 20px;
+}
+td,th{
+	padding: 10px;
+	
+}
+.table-bordered {
+   width: auto !important;
+}

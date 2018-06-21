@@ -39,4 +39,24 @@ public class PostService implements PostServiceInterface{
         return postRepository.findByTags_Id(tagId);
     }
 
+	@Override
+	public List<Post> findAllByOrderByDate() {
+		return postRepository.findAllByOrderByDate();
+	}
+
+	@Override
+	public List<Post> findAllByOrderByPopularity() {
+		return postRepository.findAllByOrderByPopularity();
+	}
+
+	@Override
+	public List<Post> findAllByCommentsCount() {
+		return postRepository.findAllByCommentsCount();
+	}
+
+//	@Override
+//	public List<Post> findAllByCommentsCountAndSearch(String parameter) {
+//		return postRepository.findAllByCommentsCountAndSearch(parameter);
+//	}
+
 }
