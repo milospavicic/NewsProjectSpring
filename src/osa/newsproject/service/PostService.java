@@ -40,8 +40,13 @@ public class PostService implements PostServiceInterface{
     }
 
 	@Override
-	public List<Post> findAllByOrderByDate() {
-		return postRepository.findAllByOrderByDate();
+	public List<Post> findAllByOrderByDateDesc() {
+		return postRepository.findAllByOrderByDateDesc();
+	}
+
+	@Override
+	public List<Post> findAllByOrderByDateAndSearch(String parameter, String parameter1) {
+		return postRepository.findAllByOrderByDateAndSearch(parameter,parameter1);
 	}
 
 	@Override
@@ -50,13 +55,18 @@ public class PostService implements PostServiceInterface{
 	}
 
 	@Override
+	public List<Post> findAllByOrderByPopularityAndSearch(String parameter, String parameter1) {
+		return postRepository.findAllByOrderByPopularityAndSearch(parameter, parameter1);
+	}
+	
+	@Override
 	public List<Post> findAllByCommentsCount() {
 		return postRepository.findAllByCommentsCount();
 	}
 
-//	@Override
-//	public List<Post> findAllByCommentsCountAndSearch(String parameter) {
-//		return postRepository.findAllByCommentsCountAndSearch(parameter);
-//	}
+	@Override
+	public List<Post> findAllByCommentsCountAndSearch(String parameter,String parameter1) {
+		return postRepository.findAllByCommentsCountAndSearch(parameter,parameter1);
+	}
 
 }

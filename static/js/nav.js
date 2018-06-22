@@ -1,4 +1,6 @@
+var currentUser = "";
 $(document).ready(function() {
+	currentUser = "tempUser";
 });
 
 

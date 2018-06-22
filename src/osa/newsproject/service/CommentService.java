@@ -39,6 +39,16 @@ public class CommentService implements CommentServiceInterface{
 		return commentRepository.findByPost_Id(postId);
 	}
 
+	@Override
+	public List<Comment> findAllByPopularity(String postId) {
+		return commentRepository.findAllByOrderByPopularity(postId);
+	}
+
+	@Override
+	public List<Comment> findAllByOrderByDateDesc(Integer postId) {
+		return commentRepository.findAllByOrderByDateDesc();
+	}
+
 	
 	
 }

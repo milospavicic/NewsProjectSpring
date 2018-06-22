@@ -19,7 +19,7 @@ function loadUsers(){
 								'<td>'+user.username+'</td>'+
 								'<td>'+user.password+'</td>'+
 								'<td><button class="btn btn-default">Edit</button></td>'+
-								'<td><button class="btn btn-default">Delete</button></td>'+
+								'<td><button class="btn btn-default" onclick="deleteUser('+user.id+')">Delete</button></td>'+
 							'</tr>');
 			}
            
@@ -38,4 +38,21 @@ function usersHeader(){
 			'<th>Username</th>'+
 			'<th>Password</th>'+
 		'</tr>');
+}
+
+function deleteUser(n){
+	console.log(n);
+	$.ajax({
+        url: 'http://localhost:8080/api/users/'+n,
+        contentType: "application/json",
+		type: 'DELETE',
+        success: function (response) {
+        	console.log("user delete success: ");
+        	loadUsers();
+           
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(textStatus);
+		}
+    });
 }

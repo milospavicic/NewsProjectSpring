@@ -19,7 +19,7 @@
                     <!-- header -->
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h3 class="modal-title">Register Form</h3>
+                        <h3 class="modal-title">New Post</h3>
                     </div>
                     <!-- body -->
                     <div class="modal-header">
@@ -33,6 +33,32 @@
                     <!-- footer -->
                     <div class="modal-footer">
                         <button class="btn btn-danger btn-block" id="newPostSubmit" onclick="saveNewPost()">Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editPostModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Edit Post</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="title" id="titleEdit" class="form-control" placeholder="Title*" required/>
+                        	<input type="text" name="description" id="descriptionEdit" class="form-control" placeholder="Description" required/>
+                        	<input type="text" name="tagsField" id="tagsFieldEdit" class="form-control" placeholder="#Cool#New" required/>
+                        	<label for="picUploadCheck">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheck" onchange="picUploadChecker()">
+              				<input type="file" name="pic" accept="image/*" id="editPic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block" id="editPostSubmit" onclick="saveEditPost()">Post</button>
                     </div>
                 </div>
             </div>
@@ -54,14 +80,14 @@
 				</select>
 			</td>
 
-			<td><input type="text" placeholder="Search" id="searchField"><button  class="btn btn-default" onclick="search()">Submit</button></td>
-			<td><button onclick="sortPosts()" class="btn btn-default">Refresh</button></td>
+			<td><input type="text" placeholder="Search" id="searchField"><button  class="btn btn-default" onclick="sortPosts()">Submit</button></td>
+			<td><button onclick="refresh()" class="btn btn-default">Refresh</button></td>
 			<td><button onclick="showNewPostModal()" class="btn btn-danger">New</button></td>
 		</tr>
 		<tr class="myHeaders">
 			<th>Title</th>
-			<th>Author</th>
 			<th>Date</th>
+			<th>Author</th>
 			<th>Likes</th>
 			<th>Dislikes</th>
 		</tr>

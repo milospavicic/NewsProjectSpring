@@ -1,11 +1,12 @@
+var postId = 0;
 $(document).ready(function() {
-	var postId = window.location.search.slice(1).split('&')[0].split('=')[1];
+	postId = window.location.search.slice(1).split('&')[0].split('=')[1];
 	console.log(postId);
-	loadPosts(postId);
-	loadComments(postId);
+	loadPage(postId);
+	loadComments("orderdate");
 	loadTags(postId);
 });
-function loadPosts(postId){
+function loadPage(postId){
 	var tempUrl = "http://localhost:8080/api/posts/"+postId;
 	console.log(tempUrl);
 	$.ajax({
@@ -33,8 +34,8 @@ function loadPosts(postId){
 		}
     });
 }
-function loadComments(postId){
-	var tempUrl = "http://localhost:8080/api/comments/post/"+postId;
+function loadComments(orderWay){
+	var tempUrl = "http://localhost:8080/api/comments/"+orderWay+"/"+postId;
 	console.log(tempUrl);
 	$.ajax({
         url: tempUrl,
@@ -56,6 +57,9 @@ function loadComments(postId){
 								'<button id="commentlike" class="btn btn-default">Like</button>'+
 								'<label for="commentdislike" id="dislikeCommLabel">'+comment.dislikes+'</label>'+
 								'<button id="commentdislike" class="btn btn-default">Dislike</button>'+
+								'<br>'+
+								'<button id="commentedit" class="btn btn-default">Edit</button>'+
+								'<button id="commentdelete" class="btn btn-default">Delete</button>'+
 								'<hr id="shortline">'+
 								'<br>'+
 							'</div>');
@@ -97,5 +101,50 @@ function commentsHeader(){
 	var table = $('#commentsDiv');
 	table.empty();
 	table.append('<hr>'+
-			'<h3>Comments:</h3>');
+			'<h3>Comments:</h3>'+
+			'<button class="btn btn-danger" onclick="newCommentModal()">New Comment</button>');
+}
+function newCommentModal(){
+	$('#newComment').modal();
+}
+function saveNewComment(){
+	var title = $('#title').val().trim();
+	var desc = $('#description').val().trim();
+	if(title=="" || desc == ""){
+		alert("Sva polja moraju biti popunjena");
+		return;
+	}	
+	var data = new FormData();
+	data.append('title',title);
+	data.append('description',desc);
+	data.append('user_id',1);
+	data.append('post_id',postId);
+	
+	$.ajax({
+		type: 'POST',
+        url: 'http://localhost:8080/api/comments/',
+        contentType: false,
+        data: data,
+		cache: false,
+		processData: false,
+        success: function (response) {
+        	$('#newComment').modal('toggle');
+        	alert("Success comm");
+        	
+        	sortChange()
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(textStatus);
+			$('#newComment').modal('toggle');
+		}
+    });
+}
+function sortChange(){
+	var sortBy = $('#sortBySelect').val();
+	console.log(sortBy);
+	if(sortBy == 1){
+		loadComments("orderdate");
+	}else if(sortBy == 2){
+		loadComments("orderpop")
+	}
 }

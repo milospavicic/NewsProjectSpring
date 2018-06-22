@@ -1,13 +1,9 @@
 package osa.newsproject.controller;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.ws.rs.PathParam;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +53,19 @@ public class PostController {
     @GetMapping(value = "/orderbydate")
     public ResponseEntity<List<PostDTO>> getPostsOrderByDate(){
     	System.out.println("orderbydate");
-        List<Post> posts=postServiceInterface.findAllByOrderByDate();
+        List<Post> posts=postServiceInterface.findAllByOrderByDateDesc();
+        List<PostDTO> postDTOS=new ArrayList<>();
+        for (Post post:posts) {
+            postDTOS.add(new PostDTO(post));
+        }
+        return new ResponseEntity<List<PostDTO>>(postDTOS,HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "/orderbydate/{parameter}")
+    public ResponseEntity<List<PostDTO>> getPostsOrderByDateAndSearch(@PathVariable("parameter") String parameter){
+    	System.out.println("orderbydate");
+    	parameter = "%"+parameter+"%";
+        List<Post> posts=postServiceInterface.findAllByOrderByDateAndSearch(parameter, parameter);
         List<PostDTO> postDTOS=new ArrayList<>();
         for (Post post:posts) {
             postDTOS.add(new PostDTO(post));
@@ -69,6 +77,18 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> getPostsOrderByPopularity(){
     	System.out.println("order_popularity");
         List<Post> posts=postServiceInterface.findAllByOrderByPopularity();
+        List<PostDTO> postDTOS=new ArrayList<>();
+        for (Post post:posts) {
+            postDTOS.add(new PostDTO(post));
+            System.out.println(post.getDate());
+        }
+        return new ResponseEntity<List<PostDTO>>(postDTOS,HttpStatus.OK);
+    }
+    @GetMapping(value = "/orderbypop/{parameter}")
+    public ResponseEntity<List<PostDTO>> getPostsOrderByPopularityAndSearch(@PathVariable("parameter") String parameter){
+    	System.out.println("order_popularity");
+    	parameter = "%"+parameter+"%";
+        List<Post> posts=postServiceInterface.findAllByOrderByPopularityAndSearch(parameter, parameter);
         List<PostDTO> postDTOS=new ArrayList<>();
         for (Post post:posts) {
             postDTOS.add(new PostDTO(post));
@@ -89,18 +109,19 @@ public class PostController {
         return new ResponseEntity<List<PostDTO>>(postDTOS,HttpStatus.OK);
     }
     
-//    @GetMapping(value = "/orderbycommcount/{parameter}")
-//    public ResponseEntity<List<PostDTO>> getPostsOrderByCommentsCountAndSearch(@PathVariable("parameter") String parameter){
-//    	System.out.println("order_comments_countSearch");
-//    	System.out.println(parameter);
-//        List<Post> posts=postServiceInterface.findAllByCommentsCountAndSearch(parameter);
-//        List<PostDTO> postDTOS=new ArrayList<>();
-//        for (Post post:posts) {
-//            postDTOS.add(new PostDTO(post));
-//            System.out.println(post.getDate());
-//        }
-//        return new ResponseEntity<List<PostDTO>>(postDTOS,HttpStatus.OK);
-//    }
+    @GetMapping(value = "/orderbycommcount/{parameter}")
+    public ResponseEntity<List<PostDTO>> getPostsOrderByCommentsCountAndSearch(@PathVariable("parameter") String parameter){
+    	System.out.println("order_comments_countSearch");
+    	parameter = "%"+parameter+"%";
+    	System.out.println(parameter);
+        List<Post> posts=postServiceInterface.findAllByCommentsCountAndSearch(parameter,parameter);
+        List<PostDTO> postDTOS=new ArrayList<>();
+        for (Post post:posts) {
+            postDTOS.add(new PostDTO(post));
+            System.out.println(post.getDate());
+        }
+        return new ResponseEntity<List<PostDTO>>(postDTOS,HttpStatus.OK);
+    }
     
     @GetMapping(value = "/{id}")
     public ResponseEntity<PostDTO> getPost(@PathVariable("id") Integer id){
@@ -129,7 +150,6 @@ public class PostController {
     										   @RequestParam("description") String description,
     										   @RequestParam("user_id") int user_id,
     										   @RequestParam("photo") MultipartFile photo){
-    	
     	Post post=new Post();
         try {
         	Date date = new Date();
@@ -164,7 +184,6 @@ public class PostController {
 			return new ResponseEntity<PostDTO>(new PostDTO(post),HttpStatus.OK);
 		}else 
 			return new ResponseEntity<PostDTO>(HttpStatus.BAD_REQUEST);
-
 	}
 
     @PutMapping(value = "/{id}",consumes = "application/json")
@@ -194,8 +213,21 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable("id")Integer id){
         Post post=postServiceInterface.findOne(id);
         if(post == null)
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         postServiceInterface.remove(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+    @DeleteMapping(value="/remove_tags/{postId}")
+	public ResponseEntity<Void> deleteTagsFromPost(@PathVariable("postId") int postId){
+        Post post=postServiceInterface.findOne(postId);
+        if(post == null)
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        for (Tag tag : post.getTags()) {
+			tag.getPosts().remove(post);
+			tagServiceInterfce.save(tag);
+		}
+        post.getTags().clear();
+        postServiceInterface.save(post);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

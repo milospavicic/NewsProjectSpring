@@ -15,4 +15,8 @@ public interface CommentServiceInterface {
 	void remove(Integer id);
 	
 	List<Comment> findByPost_Id(Integer postId);
+	
+	List<Comment> findAllByPopularity(String postId);
+	
+	List<Comment> findAllByOrderByDateDesc(Integer postId);
 }

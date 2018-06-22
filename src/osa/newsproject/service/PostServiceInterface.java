@@ -15,11 +15,15 @@ public interface PostServiceInterface{
 	
 	List<Post> findByTags_Id(Integer tagId);
 	
-	List<Post> findAllByOrderByDate();
+	List<Post> findAllByOrderByDateDesc();
+	
+	List<Post> findAllByOrderByDateAndSearch(String parameter,String parameter1);
 	
 	List<Post> findAllByOrderByPopularity();
 	
+	List<Post> findAllByOrderByPopularityAndSearch(String parameter,String parameter1);
+	
 	List<Post> findAllByCommentsCount();
 	
-//	List<Post> findAllByCommentsCountAndSearch(String parameter);
+	List<Post> findAllByCommentsCountAndSearch(String parameter,String parameter1);
 }
