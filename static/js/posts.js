@@ -68,6 +68,11 @@ function refresh(){
 }
 function showNewPostModal(){
 	$('#newPostModal').modal();
+	$('#photoUploadCheck').prop('checked', false);
+	$('#newPic').hide()
+}
+function photoUploadChecker(){
+	$('#newPic').toggle()
 }
 function saveNewPost(){
 	var title = $('#title').val().trim();
@@ -75,9 +80,18 @@ function saveNewPost(){
 	var photo = $('#newPic')[0].files[0];
 	var tagsField = $('#tagsField').val().trim();
 	var tags = tagsField.split("#");
+	var checked = false;
+	if($('#photoUploadCheck').prop('checked')){
+		checked=true;
+	}
+	console.log(checked);
+	if(checked == true && typeof photo == 'undefined'){
+		alert("You must select a photo.");
+		return;
+	}
 	console.log(photo);
 	console.log(tags.length)
-	if(title=="" || desc == "" || typeof photo == 'undefined' || tags.length==0 || tags.length==1){
+	if(title=="" || desc == "" || tags.length==0 || tags.length==1){
 		alert("Sva polja moraju biti popunjena");
 		return;
 	}
@@ -85,8 +99,10 @@ function saveNewPost(){
 	data.append('title',title);
 	data.append('description',desc);
 	data.append('user_id',1);
-	data.append('photo',photo);
-	
+	if(checked==true){
+		data.append('photo',photo);
+	}
+	var id = 0;
 	$.ajax({
 		type: 'POST',
         url: 'http://localhost:8080/api/posts/',
@@ -95,9 +111,11 @@ function saveNewPost(){
 		cache: false,
 		processData: false,
         success: function (response) {
+        	console.log("reponse");
+        	console.log("R1- "+response.id + " "+photo)
         	$('#newPostModal').modal('toggle');
         	//alert("Success post");
-        	
+        	id = response.id;
             if(tags.length!=0 && tags.length!=1 && tags!=null){
 	            for (i=1; i<tags.length; i++) {
 	            	var dataTag = new FormData();
@@ -105,14 +123,17 @@ function saveNewPost(){
 	            	createTag(dataTag,response.id);
 	            }
             }
-           
+
+        	if(checked == true){
+        		uploadPic(id,photo);
+        	}
+        	
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
 			$('#newPostModal').modal('toggle');
 			alert(textStatus);
 		}
     });
-
 }
 function createTag(data,postId){
 	$.ajax({
@@ -199,6 +220,7 @@ function editPost(n){
         	$('#descriptionEdit').val(response.description);
         	$('#titleEdit').val(response.title);
         	$('#editPic').hide();
+        	$('#picUploadCheck').prop('checked', false);
         	$('#editPostModal').modal();
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
@@ -251,13 +273,12 @@ function saveEditPost(){
 		return;
 	}
 	if(checked==true){
-		currentEditPost.photo = photo;
+		uploadPic(currentEditPostId,photo);
 	}
 	console.log("title: "+title+" description: "+desc);
 	var data = {
 			'title':title,
 			'description':desc,
-			'photo':currentEditPost.photo,
 			'likes':currentEditPost.likes,
 			'likes':currentEditPost.likes,
 			'dislikes':currentEditPost.dislikes,
@@ -303,6 +324,28 @@ function removeTags(n){
         success: function (response) {
         	console.log("post delete success: ");
         	sortPosts();
+           
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(textStatus);
+		}
+    });
+}
+function uploadPic(n,photo){
+	console.log(n+" "+photo)
+	var data = new FormData();
+	data.append("id",n)
+	data.append("photo",photo)
+	
+	$.ajax({
+		type: 'POST',
+        url: 'http://localhost:8080/api/posts/upload_photo',
+        contentType: false,
+        data: data,
+		cache: false,
+		processData: false,
+        success: function (response) {
+        	console.log("Pic upload success: ");
            
         },
 		error: function (jqXHR, textStatus, errorThrown) {  

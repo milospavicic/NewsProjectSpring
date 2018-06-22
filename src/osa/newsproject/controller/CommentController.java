@@ -60,7 +60,7 @@ public class CommentController {
     }
     
     @GetMapping(value = "/orderdate/{id}")
-    public ResponseEntity<List<CommentDTO>>getCommentsOrderDate(@PathVariable("id")int id){
+    public ResponseEntity<List<CommentDTO>>getCommentsOrderDate(@PathVariable("id")String id){
     	System.out.println(id);
         List<Comment> comments=commentServiceInterface.findAllByOrderByDateDesc(id);
         List<CommentDTO>commentDTOS=new ArrayList<>();
@@ -115,7 +115,8 @@ public class CommentController {
 
     @PutMapping(value = "/{id}",consumes = "application/json")
     public ResponseEntity<CommentDTO>updateComment(@PathVariable("id")Integer id,@RequestBody CommentDTO commentDTO){
-        Comment comment=commentServiceInterface.findOne(id);
+        System.out.println("commentPut "+id);
+    	Comment comment=commentServiceInterface.findOne(id);
         if(comment == null)
             return  new ResponseEntity<CommentDTO>(HttpStatus.BAD_REQUEST);
         comment.setTitle(commentDTO.getTitle());

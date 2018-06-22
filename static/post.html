@@ -12,6 +12,32 @@
     <script src="js/post.js" type="text/javascript"></script>
 </head>
 <body>
+<div class="modal fade" id="editPostModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Edit Post</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="title" id="titleEdit" class="form-control" placeholder="Title*" required/>
+                        	<input type="text" name="description" id="descriptionEdit" class="form-control" placeholder="Description" required/>
+                        	<input type="text" name="tagsField" id="tagsFieldEdit" class="form-control" placeholder="#Cool#New" required/>
+                        	<label for="picUploadCheck">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheck" onchange="picUploadChecker()">
+              				<input type="file" name="pic" accept="image/*" id="editPic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block" id="editPostSubmit" onclick="saveEditPost()">Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<div class="modal fade" id="newComment">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -34,14 +60,36 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="editComment">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Edit Comment</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="title" id="titleEditComment" class="form-control" placeholder="Title*" required/>
+                        	<input type="text" name="description" id="descriptionEditComment" class="form-control" placeholder="Description" required/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block" id="editCommentSubmit" onclick="saveEditComment()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<div id="mainControl">
 		<button id="loginButton" class="btn btn-default">Login</button>
 		<button id="registerButton" class="btn btn-default">Register</button>
 		<button id="logoutButton" class="btn btn-default">Logout</button>
 		<a href="posts.html" class="btn btn-default">Posts</a>
 		<a href="users.html" class="btn btn-default">Users</a>
-		<button class="btn btn-default">Edit post</button>
-		<button class="btn btn-default">Delete post</button>
+		<button class="btn btn-default" onclick="editModal()">Edit post</button>
+		<button class="btn btn-default" onclick="deletePost()">Delete post</button>
 	</div>
 	<div id="postDiv">
 		<h2 id="postTitle">Title</h2>
@@ -51,9 +99,9 @@
 		<p id="postDate">Date posted:</p>
 		<p id="tags">Tags: </p>
 		<label for="like" id="likeLabel">1234</label>
-		<button id="like" class="btn btn-default">Like</button>
+		<button id="like" class="btn btn-default" onclick="likePost()">Like</button>
 		<label for="dislike" id="dislikeLabel">1234</label>
-		<button id="dislike" class="btn btn-default">Dislike</button>
+		<button id="dislike" class="btn btn-default" onclick="dislikePost()">Dislike</button>
 		<!--  -->
 	</div>
 	<table id="mytable">

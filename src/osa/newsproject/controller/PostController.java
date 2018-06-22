@@ -1,5 +1,6 @@
 package osa.newsproject.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -148,8 +149,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostDTO> saveNewPost(@RequestParam("title") String title,
     										   @RequestParam("description") String description,
-    										   @RequestParam("user_id") int user_id,
-    										   @RequestParam("photo") MultipartFile photo){
+    										   @RequestParam("user_id") int user_id){
     	Post post=new Post();
         try {
         	Date date = new Date();
@@ -161,7 +161,6 @@ public class PostController {
             post.setDate(date);
             post.setLatitude(0);
             post.setLongitude(0);
-			post.setPhoto(photo.getBytes());
 	        post.setUser(userServiceIterface.findOne(user_id));
 			post=postServiceInterface.save(post);
 		} catch (Exception e) {
@@ -186,7 +185,7 @@ public class PostController {
 			return new ResponseEntity<PostDTO>(HttpStatus.BAD_REQUEST);
 	}
 
-    @PutMapping(value = "/{id}",consumes = "application/json")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO,@PathVariable("id") Integer id){
 
         Post post=postServiceInterface.findOne(id);
@@ -195,7 +194,6 @@ public class PostController {
 
         post.setTitle(postDTO.getTitle());
         post.setDescription(postDTO.getDescription());
-        post.setPhoto(postDTO.getPhoto());
         post.setLikes(postDTO.getLikes());
         post.setDislikes(postDTO.getDislikes());
         post.setDate(postDTO.getDate());
@@ -203,12 +201,28 @@ public class PostController {
         post.setLatitude(postDTO.getLatitude());
         post.setUser(userServiceIterface.findOne(postDTO.getUser().getId()));
 
+        post=postServiceInterface.save(post);
+        return new ResponseEntity<PostDTO>(new PostDTO(post),HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/upload_photo")
+    public ResponseEntity<PostDTO> updatePost(@RequestParam("id") Integer id,@RequestParam("photo") MultipartFile photo){
+
+        Post post=postServiceInterface.findOne(id);
+        if(post == null)
+            return  new ResponseEntity<PostDTO>(HttpStatus.BAD_REQUEST);
+
+        try {
+			post.setPhoto(photo.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return  new ResponseEntity<PostDTO>(HttpStatus.BAD_REQUEST);
+		}
 
         post=postServiceInterface.save(post);
         return new ResponseEntity<PostDTO>(new PostDTO(post),HttpStatus.OK);
-
     }
-
+    
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id")Integer id){
         Post post=postServiceInterface.findOne(id);

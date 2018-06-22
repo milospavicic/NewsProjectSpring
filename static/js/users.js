@@ -37,6 +37,7 @@ function usersHeader(){
 			'<th>Name</th>'+
 			'<th>Username</th>'+
 			'<th>Password</th>'+
+			'<th><button class="btn btn-danger" onclick="newUserModal()">New</button></th>'+
 		'</tr>');
 }
 
@@ -46,6 +47,37 @@ function deleteUser(n){
         url: 'http://localhost:8080/api/users/'+n,
         contentType: "application/json",
 		type: 'DELETE',
+        success: function (response) {
+        	console.log("user delete success: ");
+        	loadUsers();
+           
+        },
+		error: function (jqXHR, textStatus, errorThrown) {  
+			alert(textStatus);
+		}
+    });
+}
+function newUserModal(){
+	$('#newUserAdmin').modal()
+}
+function saveNewUserAdmin(){
+	var username = $('#usernameA').val();
+	var password = $('#passwordA').val();
+	var name = $('#nameA').val();
+	if(username=="" || password=="" || name==""){
+		alert("All fields must be filled");
+		return;
+	}
+	
+	
+	$.ajax({
+		type: 'PUT',
+        contentType: 'application/json',
+        url: 'http://localhost:8080/api/users/',
+        data: JSON.stringify(data),
+        dataType: 'json',
+		cache: false,
+		processData: false,
         success: function (response) {
         	console.log("user delete success: ");
         	loadUsers();

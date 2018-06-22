@@ -18,5 +18,5 @@ public interface CommentServiceInterface {
 	
 	List<Comment> findAllByPopularity(String postId);
 	
-	List<Comment> findAllByOrderByDateDesc(Integer postId);
+	List<Comment> findAllByOrderByDateDesc(String postId);
 }

@@ -11,8 +11,8 @@ import osa.newsproject.entity.Post;
 public interface CommentRepository extends JpaRepository<Comment, Integer>{
 	List<Comment> findByPost_Id(Integer postId);
 	
-	@Query(value="SELECT * FROM comments AS c  WHERE c.post_id=? ORDER BY (c.likes-c.dislikes) DESC",nativeQuery=true)
+	@Query(value="SELECT * FROM comments AS c WHERE c.post_id=? ORDER BY (c.likes-c.dislikes) DESC",nativeQuery=true)
 	List<Comment> findAllByOrderByPopularity(String param);
-	
-	List<Comment> findAllByOrderByDateDesc();
+	@Query(value="SELECT * FROM comments AS c WHERE c.post_id=? ORDER BY c.date DESC",nativeQuery=true)
+	List<Comment> findAllByOrderByDateDesc(String param);
 }

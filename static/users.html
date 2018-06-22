@@ -12,6 +12,29 @@
     <script src="js/users.js" type="text/javascript"></script>
 </head>
 <body>
+	<div class="modal fade" id="newUserAdmin">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">New user</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="username" id="usernameA" class="form-control" placeholder="Username*" required/>
+                        	<input type="text" name="password" id="passwordA" class="form-control" placeholder="Password*" required/>
+                    		<input type="text" name="name" id="nameA" class="form-control" placeholder="Name*" required/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block"  onclick="saveNewUserAdmin()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<div id="mainControl">
 		<button id="loginButton" class="btn btn-default">Login</button>
 		<button id="registerButton" class="btn btn-default">Register</button>
