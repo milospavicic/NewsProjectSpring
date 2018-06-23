@@ -119,6 +119,8 @@ function saveNewPost(){
 	data.append('title',title);
 	data.append('description',desc);
 	data.append('user_id',parseInt(currentUserId));
+	data.append('latitude',getRandomCordinate());
+	data.append('longitude',getRandomCordinate());
 	if(checked==true){
 		data.append('photo',photo);
 	}
@@ -139,7 +141,7 @@ function saveNewPost(){
             if(tags.length!=0 && tags.length!=1 && tags!=null){
 	            for (i=1; i<tags.length; i++) {
 	            	var dataTag = new FormData();
-	            	dataTag.append('name',tags[i].toUpperCase());
+	            	dataTag.append('name',tags[i].toUpperCase().trim());
 	            	createTag(dataTag,response.id);
 	            }
             }

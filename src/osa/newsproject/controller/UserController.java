@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +32,12 @@ public class UserController {
 
 	@Autowired
 	private UserServiceInterface userServiceIterface;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> getUsers() {
+		logger.info("GET Method, request for all users.");
 		List<User> users = userServiceIterface.findAll();
 		List<UserDTO> userDTOS = new ArrayList<UserDTO>();
 		for (User u : users) {
@@ -43,23 +48,31 @@ public class UserController {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Integer id) {
+		logger.info("GET Method, request for user by id: "+id+".");
 		User user = userServiceIterface.findOne(id);
-		if (user == null)
+		if (user == null) {
+			logger.error("User with id: "+id+" not found.");
 			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+		}
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/get/{username}")
 	public ResponseEntity<UserDTO> getUserByUsername(@PathVariable("username") String username) {
+		logger.info("GET Method, request for user by username: "+username+".");
 		User user = userServiceIterface.findByUsername(username);
-		if (user == null)
+		if (user == null) {
+			logger.error("User with username: "+username+" not found.");
 			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+		}
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);
 	}
 	@GetMapping(value="/{username}/{password}")
 	public ResponseEntity<UserDTO> getUserByUsernameAndPassword(@PathVariable("username") String username,@PathVariable("password") String password){
+		logger.info("GET Method, request for user by username: "+username+" and password: "+password+".[LOGIN]");
 		User user = userServiceIterface.findByUsernameAndPassword(username, password);
 		if(user == null) {
+			logger.error("User with username: "+username+" and password: "+password+" not found.");
 			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
 		}
 		System.out.println("Username: "+user.getUsername());
@@ -68,9 +81,12 @@ public class UserController {
 
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
+		logger.info("POST Method, create new user with username: "+userDTO.getUsername()+".");
 		User usernameTaken = userServiceIterface.findByUsername(userDTO.getUsername());
-		if (usernameTaken != null)
+		if (usernameTaken != null) {
+			logger.error("Username : "+userDTO.getUsername()+" is taken.");
 			return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
+		}
 		
 		User user = new User();
 		user.setName(userDTO.getName());
@@ -83,15 +99,18 @@ public class UserController {
 	}
 	@PostMapping(value = "/upload_photo")
     public ResponseEntity<Void> uploadUserPic(@RequestParam("id") Integer id,@RequestParam("photo") MultipartFile photo){
-
+		logger.info("POST Method, upload photo for user with id: "+id+".");
         User user=userServiceIterface.findOne(id);
-        if(user == null)
-            return  new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        if(user == null) {
+        	logger.error("User with id: "+id+" not found.");
+            return  new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
 
         try {
         	user.setPhoto(photo.getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error("Upload photo for user with id: "+id+" failed.");
 			return  new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -101,9 +120,12 @@ public class UserController {
 	
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO, @PathVariable("id") Integer id) {
+		logger.info("PUT Method, update user with id: "+id+".");
 		User user = userServiceIterface.findOne(id);
-		if (user == null)
-			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+		if (user == null) {
+			logger.error("User with id: "+id+" not found.");
+			return new ResponseEntity<UserDTO>(HttpStatus.NOT_FOUND);
+		}
 		user.setName(userDTO.getName());
 		user.setPassword(userDTO.getPassword());
 		user.setUserType(userDTO.getUserType());
@@ -114,13 +136,15 @@ public class UserController {
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id) {
+		logger.info("DELETE Method, delete user with id: "+id+".");
 		User user = userServiceIterface.findOne(id);
-		if (user != null) {
-			userServiceIterface.remove(id);
-			return new ResponseEntity<Void>(HttpStatus.OK);
-
+		if (user == null) {
+			logger.error("User with id: "+id+" not found.");
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+
+		userServiceIterface.remove(id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }

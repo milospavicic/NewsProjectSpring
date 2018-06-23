@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,19 +38,21 @@ public class CommentController {
     @Autowired
     private PostServiceInterface postServiceInterface;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping
     public ResponseEntity<List<CommentDTO>>getComments(){
+        logger.info("GET Method, request for all comments not sorted.");
         List<Comment> comments=commentServiceInterface.findAll();
         List<CommentDTO>commentDTOS=new ArrayList<>();
         for (Comment comment:comments) {
             commentDTOS.add(new CommentDTO(comment));
         }
-
         return new ResponseEntity<List<CommentDTO>>(commentDTOS,HttpStatus.OK);
     }
     @GetMapping(value = "/orderpop/{id}")
     public ResponseEntity<List<CommentDTO>>getCommentsOrderPop(@PathVariable("id")String id){
+    	logger.info("GET Method, request for all comments for post with id: "+id+" sorted by popularity.");
     	System.out.println(id);
         List<Comment> comments=commentServiceInterface.findAllByPopularity(id);
         List<CommentDTO>commentDTOS=new ArrayList<>();
@@ -61,6 +65,7 @@ public class CommentController {
     
     @GetMapping(value = "/orderdate/{id}")
     public ResponseEntity<List<CommentDTO>>getCommentsOrderDate(@PathVariable("id")String id){
+    	logger.info("GET Method, request for all comments for post with id: "+id+" sorted by date posted.");
     	System.out.println(id);
         List<Comment> comments=commentServiceInterface.findAllByOrderByDateDesc(id);
         List<CommentDTO>commentDTOS=new ArrayList<>();
@@ -75,9 +80,13 @@ public class CommentController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<CommentDTO>getComment(@PathVariable("id") Integer id){
+    	logger.info("GET Method, request for one comment with id: "+id+".");
         Comment comment=commentServiceInterface.findOne(id);
-        if(comment == null)
-            return new ResponseEntity<CommentDTO>(HttpStatus.NOT_FOUND);
+        if(comment == null) {
+        	logger.error("Comment with id: "+id+" not found.");
+        	return new ResponseEntity<CommentDTO>(HttpStatus.NOT_FOUND);
+        }
+            
 
         return  new ResponseEntity<CommentDTO>(new CommentDTO(comment),HttpStatus.OK);
     }
@@ -85,6 +94,7 @@ public class CommentController {
 
     @GetMapping(value = "/post/{id}")
     public ResponseEntity<List<CommentDTO>>getCommentsByPost(@PathVariable("id")Integer id){
+    	logger.info("GET Method, request for all comments for post with id: "+id+", not sorted.");
         List<Comment> comments=commentServiceInterface.findByPost_Id(id);
         List<CommentDTO>commentDTOS=new ArrayList<>();
         for (Comment comment:comments) {
@@ -99,6 +109,7 @@ public class CommentController {
 			   								  @RequestParam("description") String description,
 			   								 @RequestParam("post_id") int post_id,
 			   								 @RequestParam("user_id") int user_id){
+    	logger.info("POST Method, new comment on post with id: "+post_id+" by user with id: "+user_id+".");
     	Date date = new Date();
         Comment comment=new Comment();
         comment.setTitle(title);
@@ -115,10 +126,12 @@ public class CommentController {
 
     @PutMapping(value = "/{id}",consumes = "application/json")
     public ResponseEntity<CommentDTO>updateComment(@PathVariable("id")Integer id,@RequestBody CommentDTO commentDTO){
-        System.out.println("commentPut "+id);
+    	logger.info("PUT Method, update comment with id: "+id+".");
     	Comment comment=commentServiceInterface.findOne(id);
-        if(comment == null)
-            return  new ResponseEntity<CommentDTO>(HttpStatus.BAD_REQUEST);
+        if(comment == null) {
+        	logger.error("Comment with id: "+id+" not found.");
+            return  new ResponseEntity<CommentDTO>(HttpStatus.NOT_FOUND);
+        }
         comment.setTitle(commentDTO.getTitle());
         comment.setDescription(commentDTO.getDescription());
         comment.setLikes(commentDTO.getLikes());
@@ -131,10 +144,12 @@ public class CommentController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable("id") Integer id){
-
+    	logger.info("DELETE Method, delete comment with id: "+id+".");
         Comment comment=commentServiceInterface.findOne(id);
-        if(comment == null)
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        if(comment == null) {
+        	logger.error("Comment with id: "+id+" not found.");
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
 
         commentServiceInterface.remove(comment.getId());
         return new ResponseEntity<Void>(HttpStatus.OK);

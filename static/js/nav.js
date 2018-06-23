@@ -250,3 +250,10 @@ function saveEditUserBasic(){
 		}
     });
 }
+function getRandomCordinate() {
+	var to = 180;
+	var from = -180;
+	var fixed = 4;
+    return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+    // .toFixed() returns string, so ' * 1' is a trick to convert to number
+}

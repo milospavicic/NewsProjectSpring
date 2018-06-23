@@ -30,6 +30,7 @@ function loadPage(postId){
         	$('#postDate').text("Date posted: "+formatDate(post.date));
         	$('#likeLabel').text(post.likes);
         	$('#dislikeLabel').text(post.dislikes);
+        	$('#location').text("Longitude: " +post.longitude + ", Latitide: "+post.latitude);
         	console.log("post.photo "+post.photo);
 			var postPhoto = 'https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.2.2/bbc_news_logo.png';
 			if(post.photo!=null){
@@ -38,7 +39,8 @@ function loadPage(postId){
             $('#postPic').attr('src',''+postPhoto);
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
-			alert(textStatus);
+			alert("Post doesnt exist.");
+			window.location.href = "posts.html";
 		}
     });
 }
@@ -352,7 +354,7 @@ function saveEditPost(){
                 if(tags.length!=0 && tags.length!=1 && tags!=null){
     	            for (i=1; i<tags.length; i++) {
     	            	var dataTag = new FormData();
-    	            	dataTag.append('name',tags[i].toUpperCase());
+    	            	dataTag.append('name',tags[i].toUpperCase().trim());
     	            	createTag(dataTag);
     	            }
                 }
@@ -563,7 +565,7 @@ function likeComment(n){
 	$.ajax({
 		type: 'PUT',
         contentType: 'application/json',
-        url: 'http://localhost:8080/api/comments/'+postId,
+        url: 'http://localhost:8080/api/comments/'+n,
         data: JSON.stringify(data),
         dataType: 'json',
 		cache: false,
@@ -613,7 +615,7 @@ function dislikeComment(n){
 	$.ajax({
 		type: 'PUT',
         contentType: 'application/json',
-        url: 'http://localhost:8080/api/comments/'+postId,
+        url: 'http://localhost:8080/api/comments/'+n,
         data: JSON.stringify(data),
         dataType: 'json',
 		cache: false,
