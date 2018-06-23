@@ -2,8 +2,7 @@ var tagsBeforeEdit = "";
 var currentEditPostId = 0;
 var currentEditPost = null;
 $(document).ready(function() {
-	console.log(currentUser); //test
-	loadPosts("orderbydate");
+	refresh();
 });
 function loadPosts(orderWay){
 	var tempUrl = "http://localhost:8080/api/posts/"+orderWay;
@@ -18,15 +17,27 @@ function loadPosts(orderWay){
 			for(var i=0; i<response.length; i++) {
 				post = response[i];
 				var tempDate = formatDate(post.date);
-				table.append('<tr class="data">'+
-								'<td><a href="post.html?id='+post.id+'">'+post.title+'</a></td>'+
-								'<td>'+tempDate+'</td>'+
-								'<td>'+post.user.name+'</td>'+
-								'<td>'+post.likes+'</td>'+
-								'<td>'+post.dislikes+'</td>'+
-								'<td><button onclick="editPost('+post.id+')">Edit</button</td>'+
-								'<td><button onclick="deletePost('+post.id+')">Delete</button</td>'+
-							'</tr>');
+				if(currentUserId == "null" || currentUserUserType!="ADMIN"){
+					table.append('<tr class="data">'+
+							'<td><a href="post.html?id='+post.id+'">'+post.title+'</a></td>'+
+							'<td>'+tempDate+'</td>'+
+							'<td>'+post.user.name+'</td>'+
+							'<td>'+post.likes+'</td>'+
+							'<td>'+post.dislikes+'</td>'+
+						'</tr>');
+					
+				}else{
+					table.append('<tr class="data">'+
+							'<td><a href="post.html?id='+post.id+'">'+post.title+'</a></td>'+
+							'<td>'+tempDate+'</td>'+
+							'<td>'+post.user.name+'</td>'+
+							'<td>'+post.likes+'</td>'+
+							'<td>'+post.dislikes+'</td>'+
+							'<td><button onclick="editPost('+post.id+')">Edit</button</td>'+
+							'<td><button onclick="deletePost('+post.id+')">Delete</button</td>'+
+						'</tr>');
+				}
+				
 			}
            
         },
@@ -67,9 +78,18 @@ function refresh(){
 	sortPosts()
 }
 function showNewPostModal(){
+	if(currentUserId=="null"){
+		loginModal();
+		return;
+	}
 	$('#newPostModal').modal();
 	$('#photoUploadCheck').prop('checked', false);
 	$('#newPic').hide()
+	
+	$('#title').val("");
+	$('#description').val("");
+	$('#newPic').val("");
+	$('#tagsField').val("");
 }
 function photoUploadChecker(){
 	$('#newPic').toggle()
@@ -98,7 +118,7 @@ function saveNewPost(){
 	var data = new FormData();
 	data.append('title',title);
 	data.append('description',desc);
-	data.append('user_id',1);
+	data.append('user_id',parseInt(currentUserId));
 	if(checked==true){
 		data.append('photo',photo);
 	}
@@ -125,7 +145,7 @@ function saveNewPost(){
             }
 
         	if(checked == true){
-        		uploadPic(id,photo);
+        		uploadPicPost(id,photo);
         	}
         	
         },
@@ -273,7 +293,7 @@ function saveEditPost(){
 		return;
 	}
 	if(checked==true){
-		uploadPic(currentEditPostId,photo);
+		uploadPicPost(currentEditPostId,photo);
 	}
 	console.log("title: "+title+" description: "+desc);
 	var data = {
@@ -331,7 +351,7 @@ function removeTags(n){
 		}
     });
 }
-function uploadPic(n,photo){
+function uploadPicPost(n,photo){
 	console.log(n+" "+photo)
 	var data = new FormData();
 	data.append("id",n)
@@ -345,7 +365,7 @@ function uploadPic(n,photo){
 		cache: false,
 		processData: false,
         success: function (response) {
-        	console.log("Pic upload success: ");
+        	console.log("Pic post upload success.");
            
         },
 		error: function (jqXHR, textStatus, errorThrown) {  

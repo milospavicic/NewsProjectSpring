@@ -33,10 +33,10 @@ public class Post  implements Serializable{
 	@Column(name = "post_id", unique = true, nullable = false)
 	private Integer id;
 
-	@Column(name = "title", unique = false, nullable = false)
+	@Column(name = "title", unique = false, nullable = false, length = 200)
 	private String title;
 
-	@Column(name = "description", unique = false, nullable = false)
+	@Column(name = "description", unique = false, nullable = false, length = 5000)
 	private String description;
 
 	@Lob

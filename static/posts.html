@@ -13,6 +13,79 @@
     
 </head>
 <body>
+	<div class="modal fade" id="registerModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Register</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="username" id="registerUsername" class="form-control" placeholder="Username*" required/>
+                        	<input type="password" name="password" id="registerPassword" class="form-control" placeholder="Password*" required/>
+                    		<input type="text" name="name" id="registerName" class="form-control" placeholder="Name*" required/>
+                    		<label for="picUploadCheckReg">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheckReg" onchange="picUploadCheckerReg()">
+                        	<input type="file" name="pic" accept="image/*" id="regPic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block"  onclick="register()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<div class="modal fade" id="loginModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Login</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="username" id="loginUsername" class="form-control" placeholder="Username*" required/>
+                        	<input type="password" name="password" id="loginPassword" class="form-control" placeholder="Password*" required/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block"  onclick="login()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editUserBasic">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Edit user</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="password" id="passwordEditBasic" class="form-control" placeholder="Password*" required/>
+                    		<input type="text" name="name" id="nameEditBasic" class="form-control" placeholder="Name*" required/>
+                    		<label for="picUploadCheckEB">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheckEB" onchange="picUploadCheckerEditBasic()">
+                        	<input type="file" name="pic" accept="image/*" id="editPicBasic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block"  onclick="saveEditUserBasic()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<div class="modal fade" id="newPostModal">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -66,11 +139,11 @@
             </div>
         </div>
     <div id="mainControl">
-		<button id="loginButton" class="btn btn-default">Login</button>
-		<button id="registerButton" class="btn btn-default">Register</button>
-		<button id="logoutButton" class="btn btn-default">Logout</button>
-		<a href="posts.html" class="btn btn-default">Posts</a>
-		<a href="users.html" class="btn btn-default">Users</a>
+		<button id="loginButton" class="btn btn-default" onclick="loginModal()">Login</button>
+		<button id="registerButton" class="btn btn-default" onclick="registerModal()">Register</button>
+		<button id="logoutButton" class="btn btn-default" onclick="logout()">Logout</button>
+		<button id="editUserBasicButton" class="btn btn-default" onclick="editUserBasic()">Edit profile</button>
+		<a id="usersLink" href="users.html" class="btn btn-default">Users</a>
 	</div>
 	<table id="postsTable" class="table-bordered" >
 		<tr class="myHeaders">
@@ -83,8 +156,8 @@
 			</td>
 
 			<td><input type="text" placeholder="Search" id="searchField"><button  class="btn btn-default" onclick="sortPosts()">Submit</button></td>
-			<td><button onclick="refresh()" class="btn btn-default">Refresh</button></td>
-			<td><button onclick="showNewPostModal()" class="btn btn-danger">New</button></td>
+			<td><button onclick="refresh()" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button></td>
+			<td><button id="newPost" onclick="showNewPostModal()" class="btn btn-danger"><span class="glyphicon glyphicon glyphicon-plus"></span> </button></td>
 		</tr>
 		<tr class="myHeaders">
 			<th>Title</th>

@@ -1,5 +1,6 @@
 package osa.newsproject.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import osa.newsproject.dto.PostDTO;
 import osa.newsproject.dto.UserDTO;
+import osa.newsproject.entity.Post;
 import osa.newsproject.entity.User;
 import osa.newsproject.service.UserServiceInterface;
 
@@ -65,18 +70,35 @@ public class UserController {
 	public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
 		User usernameTaken = userServiceIterface.findByUsername(userDTO.getUsername());
 		if (usernameTaken != null)
-			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<UserDTO>(HttpStatus.FORBIDDEN);
 		
 		User user = new User();
 		user.setName(userDTO.getName());
 		user.setUsername(userDTO.getUsername());
 		user.setPassword(userDTO.getPassword());
-		user.setPhoto(userDTO.getPhoto());
+		user.setUserType(userDTO.getUserType());
 		user = userServiceIterface.save(user);
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED);
 
 	}
+	@PostMapping(value = "/upload_photo")
+    public ResponseEntity<Void> uploadUserPic(@RequestParam("id") Integer id,@RequestParam("photo") MultipartFile photo){
 
+        User user=userServiceIterface.findOne(id);
+        if(user == null)
+            return  new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+
+        try {
+        	user.setPhoto(photo.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return  new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+
+        user=userServiceIterface.save(user);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+	
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO, @PathVariable("id") Integer id) {
 		User user = userServiceIterface.findOne(id);
@@ -84,8 +106,7 @@ public class UserController {
 			return new ResponseEntity<UserDTO>(HttpStatus.BAD_REQUEST);
 		user.setName(userDTO.getName());
 		user.setPassword(userDTO.getPassword());
-		user.setPhoto(userDTO.getPhoto());
-
+		user.setUserType(userDTO.getUserType());
 		user = userServiceIterface.save(user);
 
 		return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.OK);

@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -20,6 +22,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User implements Serializable{
+	
+	public enum MyUserType {ADMIN,USER,PUBLISHER}
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "user_id", unique = true, nullable = false)
@@ -39,6 +44,10 @@ public class User implements Serializable{
 	@Column(name = "pasword", unique = false, nullable = false)
 	private String password;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name="user_type", unique=false, nullable=false)
+	private MyUserType userType;
+	
 	@OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "user")
 	private Set<Post> posts=new HashSet<Post>();
 
@@ -48,7 +57,7 @@ public class User implements Serializable{
 	public User() {
 	}
 
-	public User(Integer id, String name, byte[] photo, String username, String password, Set<Post> posts,
+	public User(Integer id, String name, byte[] photo, String username, String password, MyUserType userType, Set<Post> posts,
 			Set<Comment> comments) {
 		super();
 		this.id = id;
@@ -56,6 +65,7 @@ public class User implements Serializable{
 		this.photo = photo;
 		this.username = username;
 		this.password = password;
+		this.userType = userType;
 		this.posts = posts;
 		this.comments = comments;
 	}
@@ -67,7 +77,7 @@ public class User implements Serializable{
         getPosts().add(p);
     }
 
-    public  void remove(Post p){
+    public void remove(Post p){
         p.setUser(null);
         getPosts().remove(p);
     }
@@ -138,6 +148,14 @@ public class User implements Serializable{
 
 	public void setComments(Set<Comment> comments) {
 		this.comments = comments;
+	}
+
+	public MyUserType getUserType() {
+		return userType;
+	}
+
+	public void setUserType(MyUserType userType) {
+		this.userType = userType;
 	}
 
 	@Override

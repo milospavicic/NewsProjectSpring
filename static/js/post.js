@@ -4,7 +4,7 @@ var currentPost = null;
 var postId = 0;
 $(document).ready(function() {
 	postId = window.location.search.slice(1).split('&')[0].split('=')[1];
-	console.log(postId);
+	console.log("postId: "+postId);
 	loadPage(postId);
 	loadComments("orderdate");
 	loadTags(postId);
@@ -20,6 +20,10 @@ function loadPage(postId){
         	var post = response;
         	currentPost = post;
         	editPostFill(post);
+        	if(currentUserId==post.user.id){
+    			$('#editPost').show();
+    			$('#deletePost').show();
+        	}
         	$('#postTitle').text(post.title);
         	$('#postDesc').text(post.description);
         	$('#postAuthor').text("Author: "+post.user.name);
@@ -27,12 +31,11 @@ function loadPage(postId){
         	$('#likeLabel').text(post.likes);
         	$('#dislikeLabel').text(post.dislikes);
         	console.log("post.photo "+post.photo);
-            if(post.photo==null){
-            	$('#postPic').hide();
-            }else{
-            	console.log("putPic");
-            	$('#postPic').attr('src','data:image/gif;base64,'+post.photo);
-            }
+			var postPhoto = 'https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.2.2/bbc_news_logo.png';
+			if(post.photo!=null){
+				postPhoto = 'data:image/gif;base64,'+post.photo;
+			}
+            $('#postPic').attr('src',''+postPhoto);
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
 			alert(textStatus);
@@ -52,24 +55,59 @@ function loadComments(orderWay){
 			for(var i=0; i<response.length; i++) {
 				comment = response[i];
 				var tempDate = formatDate(comment.date);
-				table.append('<div class="comment">'+
-								'<img alt="commentPic" id="commentPic">'+
+				var commUserPhoto = 'http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640-300x300.png';
+				if(comment.user.photo!=null){
+					commUserPhoto = 'data:image/gif;base64,'+comment.user.photo;
+				}
+				
+				if(currentUserId=="null"){
+					table.append('<div class="comment">'+
+							'<img height="50" width="50" alt="commentPic" id="commentPic" src="'+commUserPhoto+'">'+
+							'<label for="commentPic" id="usernameLabel">'+comment.user.name+'</label>'+
+							'<p id="commentDate">'+'Date posted: '+tempDate+'</p>'+
+							'<h4 id="commentTitle'+comment.id+'">'+comment.title+'</h4>'+
+							'<p id="commentDescription'+comment.id+'">'+comment.description+'</p>'+
+							'<label for="commentlike" id="likeCommLabel'+comment.id+'">'+comment.likes+'</label>'+
+							'<button id="commentlike'+comment.id+'" class="btn btn-default" onclick="likeComment('+comment.id+')"><span class="glyphicon glyphicon-thumbs-up"></span> Like</button>'+
+							'<label for="commentdislike" id="dislikeCommLabel'+comment.id+'">'+comment.dislikes+'</label>'+
+							'<button id="commentdislike'+comment.id+'" class="btn btn-default"  onclick="dislikeComment('+comment.id+')"> <span class="glyphicon glyphicon-thumbs-down"></span> Dislike</button>'+
+							'<hr id="shortline">'+
+							'<br>'+
+						'</div>');
+				}else{
+					if(currentUserId==comment.user.id || currentUserUserType=="ADMIN"){
+						table.append('<div class="comment">'+
+								'<img height="50" width="50" alt="commentPic" id="commentPic" src="'+commUserPhoto+'">'+
 								'<label for="commentPic" id="usernameLabel">'+comment.user.name+'</label>'+
 								'<p id="commentDate">'+'Date posted: '+tempDate+'</p>'+
 								'<h4 id="commentTitle'+comment.id+'">'+comment.title+'</h4>'+
 								'<p id="commentDescription'+comment.id+'">'+comment.description+'</p>'+
 								'<label for="commentlike" id="likeCommLabel'+comment.id+'">'+comment.likes+'</label>'+
-								'<button id="commentlike'+comment.id+'" class="btn btn-default" onclick="likeComment('+comment.id+')">Like</button>'+
+								'<button id="commentlike'+comment.id+'" class="btn btn-default" onclick="likeComment('+comment.id+')"><span class="glyphicon glyphicon-thumbs-up"></span> Like</button>'+
 								'<label for="commentdislike" id="dislikeCommLabel'+comment.id+'">'+comment.dislikes+'</label>'+
-								'<button id="commentdislike'+comment.id+'" class="btn btn-default"  onclick="dislikeComment('+comment.id+')">Dislike</button>'+
-								'<br>'+
+								'<button id="commentdislike'+comment.id+'" class="btn btn-default"  onclick="dislikeComment('+comment.id+')"> <span class="glyphicon glyphicon-thumbs-down"></span> Dislike</button>'+
 								'<button id="commentedit" class="btn btn-default" onclick="editComment('+comment.id+')">Edit</button>'+
 								'<button id="commentdelete" class="btn btn-default" onclick="deleteComment('+comment.id+')">Delete</button>'+
 								'<hr id="shortline">'+
 								'<br>'+
 							'</div>');
+					}else{
+						table.append('<div class="comment">'+
+								'<img height="50" width="50" alt="commentPic" id="commentPic" src="'+commUserPhoto+'">'+
+								'<label for="commentPic" id="usernameLabel">'+comment.user.name+'</label>'+
+								'<p id="commentDate">'+'Date posted: '+tempDate+'</p>'+
+								'<h4 id="commentTitle'+comment.id+'">'+comment.title+'</h4>'+
+								'<p id="commentDescription'+comment.id+'">'+comment.description+'</p>'+
+								'<label for="commentlike" id="likeCommLabel'+comment.id+'">'+comment.likes+'</label>'+
+								'<button id="commentlike'+comment.id+'" class="btn btn-default" onclick="likeComment('+comment.id+')"><span class="glyphicon glyphicon-thumbs-up"></span> Like</button>'+
+								'<label for="commentdislike" id="dislikeCommLabel'+comment.id+'">'+comment.dislikes+'</label>'+
+								'<button id="commentdislike'+comment.id+'" class="btn btn-default"  onclick="dislikeComment('+comment.id+')"> <span class="glyphicon glyphicon-thumbs-down"></span> Dislike</button>'+
+								'<hr id="shortline">'+
+								'<br>'+
+							'</div>');
+					}
+				}
 			}
-           
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
 			alert(textStatus);
@@ -85,7 +123,6 @@ function loadTags(postId){
         dataType: 'json',
 		cache: false,
         success: function (response) {
-        	console.log("123");
 			for(var i=0; i<response.length; i++) {
 				tag = response[i];
 				if(i==0){
@@ -113,7 +150,13 @@ function commentsHeader(){
 			'<button class="btn btn-danger" onclick="newCommentModal()">New Comment</button>');
 }
 function newCommentModal(){
+	if(currentUserId=="null"){
+		loginModal();
+		return;
+	}
 	$('#newComment').modal();
+	$('#title').val("");
+	$('#description').val("");
 }
 function saveNewComment(){
 	var title = $('#title').val().trim();
@@ -125,7 +168,7 @@ function saveNewComment(){
 	var data = new FormData();
 	data.append('title',title);
 	data.append('description',desc);
-	data.append('user_id',1);
+	data.append('user_id',currentUserId);
 	data.append('post_id',postId);
 	
 	$.ajax({
@@ -166,8 +209,8 @@ function editComment(n){
 }
 function saveEditComment(){
 
-	var title =  $('#titleEditComment').val();
-	var desc = $('#descriptionEditComment').val();
+	var title =  $('#titleEditComment').val().trim();
+	var desc = $('#descriptionEditComment').val().trim();
 	if(title=="" || desc== ""){
 		alert("All fields must be filled")
 		return;
@@ -208,6 +251,7 @@ function sortChange(){
 	}
 }
 function editModal(){
+	console.log("editPostModal");
 	$('#editPostModal').modal();
 }
 
@@ -246,6 +290,7 @@ function linkTagToPost(tagId){
 }
 
 function editPostFill(response){
+	console.log("fill");
 	$('#titleEdit').val(response.title);
 	$('#descriptionEdit').val(response.description);
 	$('#titleEdit').val(response.title);
@@ -277,7 +322,7 @@ function saveEditPost(){
 		return;
 	}
 	if(checked==true){
-		uploadPic(photo);
+		uploadPicPost(photo);
 	}
 	console.log("title: "+title+" description: "+desc);
 	var data = {
@@ -332,7 +377,7 @@ function removeTags(){
 		}
     });
 }
-function uploadPic(photo){
+function uploadPicPost(photo){
 	var data = new FormData();
 	data.append("id",postId)
 	data.append("photo",photo)
@@ -345,7 +390,7 @@ function uploadPic(photo){
 		cache: false,
 		processData: false,
         success: function (response) {
-        	console.log("Pic upload success: ");
+        	console.log("Pic post upload success.");
            
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
@@ -380,6 +425,10 @@ function deleteComment(n){
     });
 }
 function likePost(){
+	if(currentUserId=="null"){
+		loginModal();
+		return;
+	}
 	var tempLike = parseInt($('#likeLabel').text());
 	var tempDis = parseInt($('#dislikeLabel').text());
 	if($('#dislike').prop('disabled')){
@@ -430,6 +479,10 @@ function likePost(){
     });
 }
 function dislikePost(){
+	if(currentUserId=="null"){
+		loginModal();
+		return;
+	}
 	var tempLike = parseInt($('#likeLabel').text());
 	var tempDis = parseInt($('#dislikeLabel').text());
 	if($('#like').prop('disabled')){
@@ -456,6 +509,7 @@ function dislikePost(){
 		}
 	}
 	$.ajax({
+		
 		type: 'PUT',
         contentType: 'application/json',
         url: 'http://localhost:8080/api/posts/'+postId,
@@ -480,6 +534,10 @@ function dislikePost(){
     });
 }
 function likeComment(n){
+	if(currentUserId=="null"){
+		loginModal();
+		return;
+	}
 	console.log("likeComment "+n);
 	var tempLike = parseInt($('#likeCommLabel'+n).text());
 	var tempDis = parseInt($('#dislikeCommLabel'+n).text());
@@ -526,6 +584,10 @@ function likeComment(n){
     });
 }
 function dislikeComment(n){
+	if(currentUserId=="null"){
+		loginModal();
+		return;
+	}
 	console.log("likeComment "+n);
 	var tempLike = parseInt($('#likeCommLabel'+n).text());
 	var tempDis = parseInt($('#dislikeCommLabel'+n).text());

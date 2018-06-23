@@ -31,7 +31,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>{
 			+ " ta.tag_id = t.tag_id WHERE ta.name like ? OR u.name like ?  GROUP BY p.post_id ORDER BY (p.likes-p.dislikes) DESC",nativeQuery=true)
 	List<Post> findAllByOrderByPopularityAndSearch(String param,String param1);
 	
-	@Query(value="SELECT p.* FROM posts AS p LEFT OUTER JOIN comments AS c ON p.post_id = c.post_id GROUP BY p.post_id ORDER BY COUNT(*) DESC",nativeQuery=true)
+	@Query(value="SELECT p.* FROM posts AS p LEFT OUTER JOIN comments AS c ON p.post_id = c.post_id GROUP BY p.post_id ORDER BY COUNT(DISTINCT c.comment_id) DESC",nativeQuery=true)
 	List<Post> findAllByCommentsCount();
 	
 	@Modifying

@@ -12,6 +12,31 @@
     <script src="js/users.js" type="text/javascript"></script>
 </head>
 <body>
+        <div class="modal fade" id="editUserBasic">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Edit user</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="password" id="passwordEditBasic" class="form-control" placeholder="Password*" required/>
+                    		<input type="text" name="name" id="nameEditBasic" class="form-control" placeholder="Name*" required/>
+                    		<label for="picUploadCheckEB">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheckEB" onchange="picUploadCheckerEditBasic()">
+                        	<input type="file" name="pic" accept="image/*" id="editPicBasic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block"  onclick="saveEditUserBasic()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<div class="modal fade" id="newUserAdmin">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -26,6 +51,15 @@
                         	<input type="text" name="username" id="usernameA" class="form-control" placeholder="Username*" required/>
                         	<input type="text" name="password" id="passwordA" class="form-control" placeholder="Password*" required/>
                     		<input type="text" name="name" id="nameA" class="form-control" placeholder="Name*" required/>
+                    		<label for="typeSelect">User type: </label>
+            				<select id="typeSelect" >
+            					<option value="USER">User</option>
+            					<option value="ADMIN">Admin</option>
+            					<option value="PUBLISHER">Publisher</option>
+            				</select>
+                    		<label for="picUploadCheck">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheck" onchange="picUploadChecker()">
+                        	<input type="file" name="pic" accept="image/*" id="newPic"/>
                     	</div>
                     </div>
                     <!-- footer -->
@@ -35,12 +69,41 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="editUserAdmin">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <!-- header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Edit user</h3>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-header">
+                    	<div class="form-group">
+                        	<input type="text" name="password" id="passwordAEdit" class="form-control" placeholder="Password*" required/>
+                    		<input type="text" name="name" id="nameAEdit" class="form-control" placeholder="Name*" required/>
+                    		<label for="typeSelect">User type: </label>
+            				<select id="typeSelectEdit" >
+            					<option value="USER">User</option>
+            					<option value="ADMIN">Admin</option>
+            					<option value="PUBLISHER">Publisher</option>
+            				</select>
+                    		<label for="picUploadCheck1">Upload new picture?</label>
+                        	<input type="checkbox" id="picUploadCheck1" onchange="picUploadCheckerEdit()">
+                        	<input type="file" name="pic" accept="image/*" id="editPic"/>
+                    	</div>
+                    </div>
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button class="btn btn-danger btn-block"  onclick="saveEditUserAdmin()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<div id="mainControl">
-		<button id="loginButton" class="btn btn-default">Login</button>
-		<button id="registerButton" class="btn btn-default">Register</button>
-		<button id="logoutButton" class="btn btn-default">Logout</button>
+		<button id="logoutButton" class="btn btn-default" onclick="logout()">Logout</button>
+		<button id="editUserBasicButton" class="btn btn-default" onclick="editUserBasic()">Edit profile</button>
 		<a href="posts.html" class="btn btn-default">Posts</a>
-		<a href="users.html" class="btn btn-default">Users</a>
 	</div>
 	<table id="usersTable" class="table-bordered">
 		<tr>

@@ -3,6 +3,7 @@ package osa.newsproject.dto;
 import java.io.Serializable;
 
 import osa.newsproject.entity.User;
+import osa.newsproject.entity.User.MyUserType;
 
 public class UserDTO implements Serializable{
 
@@ -10,20 +11,22 @@ public class UserDTO implements Serializable{
     private String name;
     private String username;
     private String password;
+    private MyUserType userType;
     private byte[] photo;
 
     public UserDTO() {
     }
 
-    public UserDTO(Integer id, String name, String username, String password, byte[] photo) {
+    public UserDTO(Integer id, String name, String username, String password,MyUserType userType, byte[] photo) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
+        this.userType = userType;
         this.photo = photo;
     }
     public UserDTO(User user) {
-        this(user.getId(),user.getName(),user.getUsername(),user.getPassword(),user.getPhoto());
+        this(user.getId(),user.getName(),user.getUsername(),user.getPassword(),user.getUserType(),user.getPhoto());
     }
     
 	public Integer getId() {
@@ -56,6 +59,14 @@ public class UserDTO implements Serializable{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public MyUserType getUserType() {
+		return userType;
+	}
+
+	public void setUserType(MyUserType userType) {
+		this.userType = userType;
 	}
 
 	public byte[] getPhoto() {

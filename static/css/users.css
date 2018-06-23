@@ -1,3 +1,8 @@
+body{
+	margin-right:25%;
+	margin-left:25%;
+	align-content: center;
+}
 #usersTable{
 	margin: 20px;
 }

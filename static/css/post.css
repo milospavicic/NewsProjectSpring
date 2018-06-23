@@ -1,4 +1,10 @@
 @charset "UTF-8";
+body{
+	margin-right:15%;
+	margin-left:15%;
+	align-content: center;
+}
+
 #postDiv,#commentsDiv,#mytable{
 	margin: 20px;
 }
@@ -9,4 +15,14 @@
 	margin-right:100%;
 	width: 30%;
 	float: left;
+}
+#dislike{
+	margin-right: 2%;
+}
+#commentedit{
+	margin-left: 1.2%;
+	margin-right: 0.5%;
+}
+#newCommentButton{
+	margin-bottom: 5%;
 }

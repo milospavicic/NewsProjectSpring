@@ -1,4 +1,9 @@
 @charset "UTF-8";
+body{
+	margin-right:15%;
+	margin-left:15%;
+	align-content: center;
+}
 #postsTable{
 	margin: 20px;
 }
