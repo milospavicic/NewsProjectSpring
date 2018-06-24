@@ -31,7 +31,7 @@ function loadPage(postId){
         	$('#likeLabel').text(post.likes);
         	$('#dislikeLabel').text(post.dislikes);
         	$('#location').text("Longitude: " +post.longitude + ", Latitide: "+post.latitude);
-        	console.log("post.photo "+post.photo);
+        	//console.log("post.photo "+post.photo);
 			var postPhoto = 'https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/2.2.2/bbc_news_logo.png';
 			if(post.photo!=null){
 				postPhoto = 'data:image/gif;base64,'+post.photo;
@@ -149,7 +149,7 @@ function commentsHeader(){
 	table.empty();
 	table.append('<hr>'+
 			'<h3>Comments:</h3>'+
-			'<button class="btn btn-danger" onclick="newCommentModal()">New Comment</button>');
+			'<button id="newCommentButton" class="btn btn-danger" onclick="newCommentModal()">New Comment</button>');
 }
 function newCommentModal(){
 	if(currentUserId=="null"){
@@ -351,14 +351,6 @@ function saveEditPost(){
         	if(tagsBeforeEdit.toUpperCase()!=tagsField.toUpperCase()){
         		removeTags();
             	//alert("Success post");
-                if(tags.length!=0 && tags.length!=1 && tags!=null){
-    	            for (i=1; i<tags.length; i++) {
-    	            	var dataTag = new FormData();
-    	            	dataTag.append('name',tags[i].toUpperCase().trim());
-    	            	createTag(dataTag);
-    	            }
-                }
-                
         	}
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
@@ -367,12 +359,26 @@ function saveEditPost(){
 		}
     });
 }
+function tagsFactory(){
+	tags =  $('#tagsFieldEdit').val().trim().split("#");
+	console.log(tags);
+	if(tags.length!=0 && tags.length!=1 && tags!=null){
+		console.log("123");
+        for (i=1; i<tags.length; i++) {
+        	var dataTag = new FormData();
+        	dataTag.append('name',tags[i].toUpperCase().trim());
+        	console.log("createTag");
+        	createTag(dataTag);
+        }
+    }
+}
 function removeTags(){
+	console.log("removeTags()");
 	$.ajax({
         url: 'http://localhost:8080/api/posts/remove_tags/'+postId,
 		type: 'DELETE',
         success: function (response) {
-        	
+        	tagsFactory();
         },
 		error: function (jqXHR, textStatus, errorThrown) {  
 			alert(textStatus);

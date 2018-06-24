@@ -20,6 +20,11 @@ public class TagService implements TagServiceInterface{
 	}
 
 	@Override
+	public Tag findByName(String name) {
+		return tagRepository.findByName(name);
+	}
+
+	@Override
 	public List<Tag> findAll() {
 		return tagRepository.findAll();
 	}
@@ -37,6 +42,6 @@ public class TagService implements TagServiceInterface{
 	@Override
 	public List<Tag> findByPosts_Id(Integer postId) {
 		return tagRepository.findByPosts_Id(postId);
-	}
+	}	
 	
 }

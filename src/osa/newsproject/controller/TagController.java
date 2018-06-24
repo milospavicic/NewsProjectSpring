@@ -76,7 +76,13 @@ public class TagController {
     @PostMapping
     public ResponseEntity<TagDTO>addTag(@RequestParam("name") String name){
     	logger.info("POST Method, create new tag with name: "+name+".");
-        Tag tag=new Tag();
+        Tag tag= null;
+        tag=tagServiceInterface.findByName(name);
+        if(tag != null) {
+        	logger.info("Tag with name: "+name+" already exists, creation of new one not needed.");
+        	return new ResponseEntity<TagDTO>(new TagDTO(tag),HttpStatus.ACCEPTED);
+        }
+        tag = new Tag();
         tag.setName(name);
         tag=tagServiceInterface.save(tag);
         return new ResponseEntity<TagDTO>(new TagDTO(tag),HttpStatus.CREATED);

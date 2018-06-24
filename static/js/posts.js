@@ -176,6 +176,7 @@ function createTag(data,postId){
     });
 }
 function linkTagToPost(tagId,postId){
+	console.log("tagId: "+tagId + " postId: "+postId);
 	var myUrl = 'http://localhost:8080/api/posts/link_tp/'+postId+'/'+tagId
 	console.log(myUrl)
 	$.ajax({
@@ -322,14 +323,6 @@ function saveEditPost(){
         	if(tagsBeforeEdit.toUpperCase()!=tagsField.toUpperCase()){
         		removeTags(currentEditPostId);
             	//alert("Success post");
-            	
-                if(tags.length!=0 && tags.length!=1 && tags!=null){
-    	            for (i=1; i<tags.length; i++) {
-    	            	var dataTag = new FormData();
-    	            	dataTag.append('name',tags[i].toUpperCase());
-    	            	createTag(dataTag,response.id);
-    	            }
-                }
         	}
            
         },
@@ -339,12 +332,25 @@ function saveEditPost(){
 		}
     });
 }
+function tagsFactory(postId){
+	tags =  $('#tagsFieldEdit').val().trim().split("#");
+	console.log(tags);
+	if(tags.length!=0 && tags.length!=1 && tags!=null){
+		console.log("123");
+        for (i=1; i<tags.length; i++) {
+        	var dataTag = new FormData();
+        	dataTag.append('name',tags[i].toUpperCase().trim());
+        	console.log("createTag");
+        	createTag(dataTag,postId);
+        }
+    }
+}
 function removeTags(n){
 	$.ajax({
         url: 'http://localhost:8080/api/posts/remove_tags/'+n,
 		type: 'DELETE',
         success: function (response) {
-        	console.log("post delete success: ");
+        	tagsFactory(n);
         	sortPosts();
            
         },

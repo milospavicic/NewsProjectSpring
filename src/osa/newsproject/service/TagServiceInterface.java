@@ -10,6 +10,8 @@ public interface TagServiceInterface {
 	
 	Tag findOne(Integer tagId);
 	
+	Tag findByName(String name);
+	
 	List<Tag> findAll();
 	
 	Tag save(Tag tag);

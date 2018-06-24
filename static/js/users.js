@@ -30,6 +30,7 @@ function loadUsers(){
 								'<td>'+user.name+'</td>'+
 								'<td>'+user.username+'</td>'+
 								'<td>'+user.password+'</td>'+
+								'<td>'+user.userType+'</td>'+
 								'<td><button class="btn btn-default" onclick="editUserAdminModal('+user.id+')">Edit</button></td>'+
 								'<td><button class="btn btn-default" onclick="deleteUser('+user.id+')">Delete</button></td>'+
 							'</tr>');
@@ -49,6 +50,7 @@ function usersHeader(){
 			'<th>Name</th>'+
 			'<th>Username</th>'+
 			'<th>Password</th>'+
+			'<th>Role</th>'+
 			'<th><button class="btn btn-default" onclick="loadUsers()"><span class="glyphicon glyphicon-refresh"></span></button></th>'+
 			'<th><button class="btn btn-danger" onclick="newUserModal()"><span class="glyphicon glyphicon-plus"></span></button></th>'+
 		'</tr>');
@@ -74,6 +76,10 @@ function newUserModal(){
 	$('#newUserAdmin').modal()
 	$('#newPic').hide();
 	$('#picUploadCheck').prop('checked', false);
+	$('#usernameA').val("");
+	$('#passwordA').val("");
+	$('#nameA').val("");
+	$('#newPic').val("");
 }
 function saveNewUserAdmin(){
 	var username = $('#usernameA').val().trim();

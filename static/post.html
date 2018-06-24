@@ -179,20 +179,18 @@
 		<button id="deletePost" class="btn btn-default" onclick="deletePost()">Delete post</button>
 		<!--  -->
 	</div>
-	<table id="mytable">
-		<th>
-			<label for="sortBySelect">Sort comments by: </label>
-			<select id="sortBySelect" onChange="sortChange()">
-				<option value="1">Most recent</option>
-				<option value="2">Most popular</option>
-			</select>
-		</th>
-	</table>
+
+	<label for="sortBySelect" id="sortByLabel">Sort comments by: </label>
+	<select id="sortBySelect" onChange="sortChange()">
+		<option value="1">Most recent</option>
+		<option value="2">Most popular</option>
+	</select>
+
 	
 	<div id="commentsDiv">
 		<hr>
-		<button id="newCommentButton" class="btn btn-danger" onclick="newCommentModal()">New Comment</button>
 		<h3 id="commentH3">Comments:</h3>
+		<button id="newCommentButton" class="btn btn-danger" onclick="newCommentModal()">New Comment</button>
 		<div class="comment">
 			<img alt="commentPic" id="commentPic">
 			<label for="commentPic">User name</label>
